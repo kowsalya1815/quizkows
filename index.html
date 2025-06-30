@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Creative Quiz Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      margin: 0;
+      padding: 20px;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+    }
+    .question-card {
+      background: #ffffff10;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .question-card h3 {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin: 5px 0;
+      padding: 5px 10px;
+      background: #ffffff20;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+    .submit-btn {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 30px;
+      font-size: 18px;
+      background-color: #00c9a7;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+    }
+    #score-section {
+      text-align: center;
+      font-size: 24px;
+      margin-top: 30px;
+      background: #ffffff20;
+      padding: 20px;
+      border-radius: 15px;
+    }
+    .progress-counter {
+      text-align: right;
+      font-size: 14px;
+      margin-bottom: 10px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌟 Creative Quiz Challenge</h1>
+
+  <div class="quiz-container">
+    <form id="quizForm"></form>
+    <div id="score-section"></div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "What is the capital of France?", a: "Paris", options: ["London", "Paris", "Berlin"] },
+      { q: "Who invented the light bulb?", a: "Thomas Edison", options: ["Newton", "Einstein", "Thomas Edison"] },
+      { q: "What is the chemical symbol for water?", a: "H2O", options: ["CO2", "H2O", "O2"] },
+      { q: "What is 10 × 10?", a: "100", options: ["10", "100", "1000"] },
+      { q: "Which planet is closest to the sun?", a: "Mercury", options: ["Venus", "Earth", "Mercury"] },
+      { q: "Who wrote 'Romeo and Juliet'?", a: "William Shakespeare", options: ["Charles Dickens", "William Shakespeare", "Leo Tolstoy"] },
+      { q: "Which gas do plants absorb?", a: "Carbon Dioxide", options: ["Oxygen", "Carbon Dioxide", "Hydrogen"] },
+      { q: "What is the square root of 64?", a: "8", options: ["6", "7", "8"] },
+      { q: "What is the largest mammal?", a: "Blue Whale", options: ["Elephant", "Giraffe", "Blue Whale"] },
+      { q: "What color is chlorophyll?", a: "Green", options: ["Red", "Green", "Blue"] },
+      { q: "What is the national flower of India?", a: "Lotus", options: ["Rose", "Lily", "Lotus"] },
+      { q: "Which instrument has keys, pedals, and strings?", a: "Piano", options: ["Guitar", "Piano", "Flute"] },
+      { q: "Which is the smallest prime number?", a: "2", options: ["1", "2", "3"] },
+      { q: "What is the boiling point of water?", a: "100°C", options: ["90°C", "100°C", "120°C"] },
+      { q: "Which continent is the Sahara Desert in?", a: "Africa", options: ["Asia", "Africa", "Australia"] },
+      { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci", options: ["Picasso", "Leonardo da Vinci", "Van Gogh"] },
+      { q: "What is the main language spoken in Brazil?", a: "Portuguese", options: ["Spanish", "Portuguese", "French"] },
+      { q: "How many legs does a spider have?", a: "8", options: ["6", "8", "10"] },
+      { q: "What is the currency of Japan?", a: "Yen", options: ["Won", "Yen", "Dollar"] },
+      { q: "What is the largest organ in the human body?", a: "Skin", options: ["Liver", "Brain", "Skin"] }
+    ];
+
+    const form = document.getElementById('quizForm');
+
+    questions.forEach((q, i) => {
+      const card = document.createElement('div');
+      card.className = 'question-card';
+
+      const progress = document.createElement('div');
+      progress.className = 'progress-counter';
+      progress.innerHTML = `Question ${i + 1} of ${questions.length}`;
+      card.appendChild(progress);
+
+      const questionTitle = document.createElement('h3');
+      questionTitle.innerText = q.q;
+      card.appendChild(questionTitle);
+
+      q.options.forEach(opt => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="radio" name="q${i}" value="${opt}"> ${opt}`;
+        card.appendChild(label);
+      });
+
+      form.appendChild(card);
+    });
+
+    const submitBtn = document.createElement('button');
+    submitBtn.type = 'submit';
+    submitBtn.className = 'submit-btn';
+    submitBtn.textContent = 'Submit Quiz';
+    form.appendChild(submitBtn);
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      let score = 0;
+
+      questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && selected.value === q.a) {
+          score++;
+        }
+      });
+
+      document.getElementById('score-section').innerHTML =
+        `🎉 You scored <strong>${score}</strong> out of <strong>${questions.length}</strong>!`;
+
+      // Optional: send score to server
+      fetch("https://example.com/api/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ score: score })
+      }).catch(console.error);
+    });
+  </script>
+</body>
+</html>
